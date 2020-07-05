@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "./adapters/API";
+import { Container, Segment } from "semantic-ui-react";
 
 const App = () => {
   const [user, setUser] = useState(false);
@@ -45,6 +46,7 @@ const App = () => {
               user={user}
               setError={setError}
               setUser={setUser}
+              logOut={() => logOut()}
             />
           ) : (
             <UnauthenticatedApp
