@@ -29,7 +29,33 @@ const App = () => {
   }, []);
 
   if (!validatedUser) return <LoadingScreen />;
-  else return <div className="App"></div>;
+  else
+    return (
+      <div className="App">
+        <Container id="main-content">
+          <Navbar user={user} setUser={setUser} />
+          {error && (
+            <Segment textAlign="center" color="red" inverted>
+              {" "}
+              <h2>{error.message}</h2>
+            </Segment>
+          )}
+          {user ? (
+            <AuthenticatedApp
+              user={user}
+              setError={setError}
+              setUser={setUser}
+            />
+          ) : (
+            <UnauthenticatedApp
+              setUser={setUser}
+              setError={setError}
+              user={user}
+            />
+          )}
+        </Container>
+      </div>
+    );
 };
 
 export default App;
