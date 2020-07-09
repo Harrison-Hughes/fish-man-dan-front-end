@@ -2,13 +2,25 @@ import React, { useState, useEffect } from "react";
 import { Button, Divider, Form, Grid, Segment } from "semantic-ui-react";
 import API from "../adapters/API";
 
-const SignupForm = ({ setError, setUser }) => {
+const SignupForm = ({ setError, setUser, changeToLogin }) => {
+  const [signupEnabled, setSignupEnabled] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     password_confirmation: "",
     full_name: "",
   });
+
+  useEffect(() => {
+    if (
+      validateEmail(formData["email"]) &&
+      formData["password"].length > 5 &&
+      formData["password_confirmation"].length > 1
+    ) {
+      setSignupEnabled(true);
+    } else setSignupEnabled(false);
+  }, [formData]);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,27 +35,34 @@ const SignupForm = ({ setError, setUser }) => {
       formData["password_confirmation"],
       formData["full_name"]
     );
-    // API.signin(formData)
-    //   .then((user) => {
-    //     setUser(user);
-    //   })
-    //   .then(() => setError(false))
-    //   .catch((errorPromise) => {
-    //     errorPromise.then(setError);
-    //   });
+    API.signin(formData)
+      .then((user) => {
+        setUser(user);
+      })
+      .then(() => setError(false))
+      .catch((errorPromise) => {
+        setError(errorPromise);
+      });
   };
 
   return (
     <Segment placeholder>
       <Grid columns={2} relaxed="very" stackable>
         <Grid.Column verticalAlign="middle">
-          <Button content="Log in" icon="sign-in" size="big" />
+          <Button
+            onClick={() => changeToLogin()}
+            content="Log in"
+            icon="sign-in"
+            size="big"
+          />
         </Grid.Column>
 
         <Grid.Column>
           <Form onSubmit={handleSubmit}>
             <Form.Group widths="equal">
               <Form.Input
+                // data-tooltip="Your full name, or a reference"
+                // data-position="top left"
                 icon="user"
                 iconPosition="left"
                 // label="name"
@@ -52,6 +71,8 @@ const SignupForm = ({ setError, setUser }) => {
                 onChange={handleChange}
               />
               <Form.Input
+                // data-tooltip="Your preferred e-mail address"
+                // data-position="top left"
                 icon="mail"
                 iconPosition="left"
                 // label="e-mail"
@@ -81,7 +102,7 @@ const SignupForm = ({ setError, setUser }) => {
               />
             </Form.Group>
 
-            <Button content="sign up" primary />
+            <Button disabled={!signupEnabled} content="sign up" primary />
           </Form>
         </Grid.Column>
       </Grid>

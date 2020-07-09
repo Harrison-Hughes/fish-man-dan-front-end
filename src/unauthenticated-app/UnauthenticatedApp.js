@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
 const UnauthenticatedApp = ({ setUser, setError, user }) => {
-  const [loginOrSignup, setLoginOrSignup] = [true];
+  const [loginOrSignup, setLoginOrSignup] = useState(true);
 
   return (
     <div className="unauthenticated-app">
@@ -11,10 +11,14 @@ const UnauthenticatedApp = ({ setUser, setError, user }) => {
         <LoginForm
           setError={setError}
           setUser={setUser}
-          changeToSignup={setLoginOrSignup(false)}
+          changeToSignup={() => setLoginOrSignup(false)}
         />
       ) : (
-        <SignupForm changeToLogin={setLoginOrSignup(false)} />
+        <SignupForm
+          setError={setError}
+          setUser={setUser}
+          changeToLogin={() => setLoginOrSignup(true)}
+        />
       )}
     </div>
   );

@@ -16,7 +16,7 @@ const handleUserResponse = (user) => {
 };
 
 const signin = (user) =>
-  fetch(`${API_ROOT}/signin`, {
+  fetch(`${API_ROOT}/login`, {
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({ user }),

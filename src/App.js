@@ -12,7 +12,7 @@ const App = () => {
   const [error, setError] = useState(false);
 
   const logOut = () => {
-    setUser(null);
+    setUser(false);
     API.clearToken();
   };
 

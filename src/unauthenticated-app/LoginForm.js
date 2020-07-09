@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, Divider, Form, Grid, Segment } from "semantic-ui-react";
+import { Button, Divider, Form, Grid, Segment, Icon } from "semantic-ui-react";
 import API from "../adapters/API";
 
-const LogInForm = ({ setError, setUser }) => {
+const LogInForm = ({ setError, setUser, changeToSignup }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loginEnabled, setLoginEnabled] = useState(false);
 
@@ -19,14 +19,14 @@ const LogInForm = ({ setError, setUser }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("logging in with", formData["email"], formData["password"]);
-    // API.signin(formData)
-    //   .then((user) => {
-    //     setUser(user);
-    //   })
-    //   .then(() => setError(false))
-    //   .catch((errorPromise) => {
-    //     errorPromise.then(setError);
-    //   });
+    API.signin(formData)
+      .then((user) => {
+        setUser(user);
+      })
+      .then(() => setError(false))
+      .catch((errorPromise) => {
+        setError(errorPromise);
+      });
   };
 
   return (
@@ -51,13 +51,18 @@ const LogInForm = ({ setError, setUser }) => {
               name="password"
               onChange={handleChange}
             />
-
             <Button disabled={!loginEnabled} content="log in" primary />
+            {/* <Button circular icon="question circle outline"></Button> */}
           </Form>
         </Grid.Column>
 
         <Grid.Column verticalAlign="middle">
-          <Button content="Sign up" icon="signup" size="big" />
+          <Button
+            onClick={() => changeToSignup()}
+            content="Sign up"
+            icon="signup"
+            size="big"
+          />
         </Grid.Column>
       </Grid>
 
