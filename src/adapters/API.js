@@ -41,10 +41,17 @@ const validate = () =>
     .then(jsonify)
     .then(handleUserResponse);
 
+const getItems = () =>
+  fetch(`${API_ROOT}/items`, {
+    method: "GET",
+    headers: HEADERS_AUTH,
+  }).then(jsonify);
+
 export default {
   signin,
   signup,
   validate,
+  getItems,
   hasToken: !!localStorage.fishManDanToken,
   clearToken: () => localStorage.removeItem("fishManDanToken"),
 };
