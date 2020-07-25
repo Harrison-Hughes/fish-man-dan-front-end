@@ -36,9 +36,8 @@ const App = () => {
   if (!validatedUser) return <LoadingScreen />;
   else
     return (
-      <div className="App">
+      <div className="app">
         <Container id="main-content">
-          <Navbar user={user} setUser={setUser} />
           {error && (
             <Segment textAlign="center" color="red" inverted>
               {" "}
