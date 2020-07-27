@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import API from "../adapters/API";
-import ItemCard from "./ItemCard";
-import ItemCard2 from "./ItemCard2";
+import ItemCardInteractive from "./ItemCardInteractive";
+import ItemCardView from "./ItemCardView";
 import { Button, Icon, Image, Item, Label, Card } from "semantic-ui-react";
 
 const Items = ({
@@ -34,7 +34,7 @@ const Items = ({
       return (
         <Card.Group>
           {items.map((i) => (
-            <ItemCard2
+            <ItemCardView
               item={i}
               key={i.id}
               basket={basket}
@@ -47,7 +47,7 @@ const Items = ({
       return (
         <Item.Group divided>
           {items.map((i) => (
-            <ItemCard
+            <ItemCardInteractive
               item={i}
               key={i.id}
               basket={basket}
@@ -58,26 +58,7 @@ const Items = ({
       );
   };
 
-  return (
-    <div className="items">
-      {itemsType()}
-      {/* <Item.Group divided>
-        {items.map((i) => (
-          <ItemCard item={i} key={i.id} basket={basket} setBasket={setBasket} />
-        ))}
-      </Item.Group>
-      <Card.Group>
-        {items.map((i) => (
-          <ItemCard2
-            item={i}
-            key={i.id}
-            basket={basket}
-            setBasket={setBasket}
-          />
-        ))}
-      </Card.Group> */}
-    </div>
-  );
+  return <div className="items">{itemsType()}</div>;
 };
 
 export default Items;

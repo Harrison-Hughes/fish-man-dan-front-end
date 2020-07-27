@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Card } from "semantic-ui-react";
 
-const ItemCard = ({ item }) => {
+const ItemCardView = ({ item }) => {
   return (
     <Card>
       <Card.Content>
-        <Card.Header as="a">{item.name}</Card.Header>
+        <Card.Header>{item.name}</Card.Header>
         <Card.Meta>
           <span className="meta">price per unit</span>
         </Card.Meta>
@@ -15,4 +15,4 @@ const ItemCard = ({ item }) => {
   );
 };
 
-export default ItemCard;
+export default ItemCardView;
