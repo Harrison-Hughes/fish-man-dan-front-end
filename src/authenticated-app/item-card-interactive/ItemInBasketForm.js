@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Item, Form } from "semantic-ui-react";
+import { Button, Icon, Item, Form, Popup } from "semantic-ui-react";
 import NumericInput from "react-numeric-input";
 
 const ItemInBasketForm = ({
@@ -13,44 +13,45 @@ const ItemInBasketForm = ({
 }) => {
   const [formData, setFormData] = useState({
     item_id: item.id,
-    amount: 0,
+    amount: basket.find((i) => i.item_id === item.id).amount,
     note: "",
   });
-  const [addToBasketEnabled, setAddToBasketEnabled] = useState(false);
+  const [editBasketEnabled, setEditBasketEnabled] = useState(false);
+  // const [removeFromBasketEnabled, setRemoveFromBasketEnabled] = useState(true);
 
   useEffect(() => {
-    if (formData["amount"] > min && formData["amount"] % stepSize === 0) {
-      setAddToBasketEnabled(true);
-    } else setAddToBasketEnabled(false);
-  }, [formData]);
+    if (
+      formData["amount"] > min &&
+      formData["amount"] % stepSize === 0 &&
+      (formData["amount"] !==
+        basket.find((i) => i.item_id === item.id).amount ||
+        formData["note"] !== basket.find((i) => i.item_id === item.id).note)
+    ) {
+      setEditBasketEnabled(true);
+    } else setEditBasketEnabled(false);
+  }, [formData, basket]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAddToBasket = (event) => {
-    event.preventDefault();
+  const handleEditBasket = (e) => {
+    e.preventDefault();
     let basketIndexOfItem = basket.findIndex((i) => i.item_id == item.id);
-    if (basketIndexOfItem >= 0) {
-      setBasket(
-        Object.assign([], basket, {
-          [basketIndexOfItem]: {
-            item_id: formData["item_id"],
-            amount: formData["amount"],
-            note: formData["note"],
-          },
-        })
-      );
-    } else {
-      setBasket([
-        ...basket,
-        {
+    setBasket(
+      Object.assign([], basket, {
+        [basketIndexOfItem]: {
           item_id: formData["item_id"],
           amount: formData["amount"],
           note: formData["note"],
         },
-      ]);
-    }
+      })
+    );
+  };
+
+  const handleRemoveFromBasket = (e) => {
+    e.preventDefault();
+    setBasket(basket.filter((i) => i.item_id !== item.id));
   };
 
   const myFormat = (num) => {
@@ -62,7 +63,7 @@ const ItemInBasketForm = ({
   };
 
   return (
-    <Form size="small" onSubmit={handleAddToBasket}>
+    <Form size="small" onSubmit={handleEditBasket}>
       <Form.Group>
         <NumericInput
           name="amount"
@@ -79,15 +80,20 @@ const ItemInBasketForm = ({
           name="note"
           onChange={handleChange}
         />
-        <Button
-          disabled={!addToBasketEnabled}
-          content="edit basket"
-          type="submit"
-        />
-        <Button
-          disabled={!addToBasketEnabled}
+        <Button disabled={!editBasketEnabled} content="update" type="submit" />
+        <Popup
+          trigger={
+            <Button
+              color="red"
+              icon
+              // disabled={!removeFromBasketEnabled}
+              onClick={handleRemoveFromBasket}
+            >
+              <Icon name="trash alternate" />
+            </Button>
+          }
           content="remove from basket"
-          type="submit"
+          basic
         />
       </Form.Group>
     </Form>

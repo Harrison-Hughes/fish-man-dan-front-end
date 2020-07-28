@@ -30,27 +30,14 @@ const ItemNotInBasketForm = ({
 
   const handleAddToBasket = (event) => {
     event.preventDefault();
-    let basketIndexOfItem = basket.findIndex((i) => i.item_id == item.id);
-    if (basketIndexOfItem >= 0) {
-      setBasket(
-        Object.assign([], basket, {
-          [basketIndexOfItem]: {
-            item_id: formData["item_id"],
-            amount: formData["amount"],
-            note: formData["note"],
-          },
-        })
-      );
-    } else {
-      setBasket([
-        ...basket,
-        {
-          item_id: formData["item_id"],
-          amount: formData["amount"],
-          note: formData["note"],
-        },
-      ]);
-    }
+    setBasket([
+      ...basket,
+      {
+        item_id: formData["item_id"],
+        amount: formData["amount"],
+        note: formData["note"],
+      },
+    ]);
   };
 
   const myFormat = (num) => {
@@ -64,7 +51,6 @@ const ItemNotInBasketForm = ({
   return (
     <Form size="small" onSubmit={handleAddToBasket}>
       <Form.Group>
-        {/* <Form.Input name="amount" onChange={handleChange} /> */}
         <NumericInput
           name="amount"
           onChange={handleAmountChange}

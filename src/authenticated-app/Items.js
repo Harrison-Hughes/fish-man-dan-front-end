@@ -4,16 +4,9 @@ import ItemCardInteractive from "./ItemCardInteractive";
 import ItemCardView from "./ItemCardView";
 import { Button, Icon, Image, Item, Label, Card } from "semantic-ui-react";
 
-const Items = ({
-  user,
-  setUser,
-  setError,
-  logOut,
-  basket,
-  setBasket,
-  mode,
-}) => {
+const Items = ({ setUser, setError, basket, setBasket, mode }) => {
   const [items, setItems] = useState([]);
+  const [selectedItemID, setSelectedItemID] = useState(null);
 
   useEffect(() => {
     API.getItems()
@@ -45,16 +38,18 @@ const Items = ({
       );
     else if (mode == "interact")
       return (
-        <Item.Group divided>
+        <Card.Group>
           {items.map((i) => (
             <ItemCardInteractive
               item={i}
               key={i.id}
               basket={basket}
               setBasket={setBasket}
+              selectedItemID={selectedItemID}
+              setSelectedItemID={setSelectedItemID}
             />
           ))}
-        </Item.Group>
+        </Card.Group>
       );
   };
 

@@ -1,28 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Item, Form } from "semantic-ui-react";
-import NumericInput from "react-numeric-input";
+import { Item, Card, Label, Button, Image } from "semantic-ui-react";
 import ItemNotInBasketForm from "./item-card-interactive/ItemNotInBasketForm";
 import ItemInBasketForm from "./item-card-interactive/ItemInBasketForm";
 
-const ItemCardInteractive = ({ item, basket, setBasket }) => {
-  const [min, max, stepSize, units] = [0, 5000, 200, "g"];
+const ItemCardInteractive = ({
+  item,
+  basket,
+  setBasket,
+  selectedItemID,
+  setSelectedItemID,
+}) => {
+  const [min, max, stepSize, units, pricePerStepSize] = [
+    0,
+    5000,
+    500,
+    "g",
+    4.1,
+  ];
 
   const itemInBasket = () => {
     return !!basket.find((i) => i.item_id == item.id);
   };
 
-  return (
-    <Item>
-      <Item.Content>
-        <Item.Header>
-          {item.name}
-          <Icon name="twitter" />
-        </Item.Header>
-        <Item.Meta>
-          <span className="meta">price per unit</span>
-        </Item.Meta>
-        <Item.Description>{item.description}</Item.Description>
-        <Item.Extra>
+  const inBasketLabel = () => {
+    if (itemInBasket()) {
+      return <Label as="a" color="yellow" corner="right" icon="shop"></Label>;
+    }
+  };
+
+  const onCardClick = () => {
+    if (selectedItemID === item.id) {
+      setSelectedItemID(null);
+    } else setSelectedItemID(item.id);
+  };
+
+  const selectedCardForm = () => {
+    if (selectedItemID === item.id)
+      return (
+        <Card.Content extra>
           {itemInBasket() ? (
             <ItemInBasketForm
               min={min}
@@ -44,27 +59,48 @@ const ItemCardInteractive = ({ item, basket, setBasket }) => {
               item={item}
             />
           )}
-          {/* <ItemNotInBasket
-            min={min}
-            max={max}
-            stepSize={stepSize}
-            units={units}
-            basket={basket}
-            setBasket={setBasket}
-            item={item}
-          />
-          <ItemInBasket
-            min={min}
-            max={max}
-            stepSize={stepSize}
-            units={units}
-            basket={basket}
-            setBasket={setBasket}
-            item={item}
-          /> */}
-        </Item.Extra>
-      </Item.Content>
-    </Item>
+        </Card.Content>
+      );
+  };
+
+  const currentDetailsOfItemInBasket = () => {
+    if (itemInBasket()) {
+      let currBasketDetails = basket.find((i) => i.item_id === item.id);
+      let price = (currBasketDetails.amount / stepSize) * pricePerStepSize;
+      return (
+        <Card.Content floated="right" extra>
+          <b>
+            Basket: {currBasketDetails.amount}
+            {units} ~ £{(Math.round(price * 100) / 100).toFixed(2)}
+          </b>
+          <br />
+          <b>
+            {!!currBasketDetails.note
+              ? "Note: " + currBasketDetails.note
+              : null}
+          </b>
+        </Card.Content>
+      );
+    }
+  };
+
+  return (
+    <Card link fluid>
+      {inBasketLabel()}
+      <Card.Content onClick={() => onCardClick()}>
+        <Card.Header>{item.name}</Card.Header>
+        <Card.Meta>
+          <span className="meta">
+            £{(Math.round(pricePerStepSize * 100) / 100).toFixed(2)} per{" "}
+            {stepSize}
+            {units}
+          </span>
+        </Card.Meta>
+        <Card.Description>{item.description}</Card.Description>
+      </Card.Content>
+      {selectedCardForm()}
+      {currentDetailsOfItemInBasket()}
+    </Card>
   );
 };
 

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import API from "./adapters/API";
 import { Container, Segment } from "semantic-ui-react";
 import LoadingScreen from "./LoadingScreen";
-import Navbar from "./Navbar";
 import AuthenticatedApp from "./authenticated-app/AuthenticatedApp";
 import UnauthenticatedApp from "./unauthenticated-app/UnauthenticatedApp";
 
