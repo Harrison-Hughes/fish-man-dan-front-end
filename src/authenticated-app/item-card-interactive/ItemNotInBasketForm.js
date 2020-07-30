@@ -41,17 +41,17 @@ const ItemNotInBasketForm = ({
     ]);
   };
 
+  const currentPriceOfItem = () => {
+    let price = (formData["amount"] / stepSize) * pricePerStepSize;
+    return (Math.round(price * 100) / 100).toFixed(2);
+  };
+
   const myFormat = (num) => {
-    return num + units;
+    return num + units + "  ~  £" + currentPriceOfItem();
   };
 
   const handleAmountChange = (amount) => {
     setFormData({ ...formData, amount: amount });
-  };
-
-  const currentPriceOfItem = () => {
-    let price = (formData["amount"] / stepSize) * pricePerStepSize;
-    return (Math.round(price * 100) / 100).toFixed(2);
   };
 
   return (

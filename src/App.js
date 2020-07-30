@@ -14,6 +14,7 @@ const App = () => {
     setUser(false);
     API.clearToken();
     localStorage.removeItem("fishManDanToken");
+    localStorage.removeItem("fishManDanLocalBasket");
   };
 
   useEffect(() => {

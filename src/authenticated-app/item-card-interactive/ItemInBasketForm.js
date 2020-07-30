@@ -49,22 +49,22 @@ const ItemInBasketForm = ({
     );
   };
 
+  const currentPriceOfItem = () => {
+    let price = (formData["amount"] / stepSize) * pricePerStepSize;
+    return (Math.round(price * 100) / 100).toFixed(2);
+  };
+
   const handleRemoveFromBasket = (e) => {
     e.preventDefault();
     setBasket(basket.filter((i) => i.item_id !== item.id));
   };
 
   const myFormat = (num) => {
-    return num + units;
+    return num + units + "  ~  £" + currentPriceOfItem();
   };
 
   const handleAmountChange = (amount) => {
     setFormData({ ...formData, amount: amount });
-  };
-
-  const currentPriceOfItem = () => {
-    let price = (formData["amount"] / stepSize) * pricePerStepSize;
-    return (Math.round(price * 100) / 100).toFixed(2);
   };
 
   return (
@@ -100,12 +100,6 @@ const ItemInBasketForm = ({
           content="remove from basket"
           basic
         />
-        {/* <Label size="medium" float="right">
-          £{currentPriceOfItem()}
-        </Label> */}
-        <Button disabled basic floated="right">
-          £{currentPriceOfItem()}
-        </Button>
       </Form.Group>
     </Form>
   );
