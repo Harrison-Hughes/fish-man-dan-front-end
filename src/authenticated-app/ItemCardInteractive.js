@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Item, Card, Label, Button, Image } from "semantic-ui-react";
+import React from "react";
+import { Card, Label } from "semantic-ui-react";
 import ItemNotInBasketForm from "./item-card-interactive/ItemNotInBasketForm";
 import ItemInBasketForm from "./item-card-interactive/ItemInBasketForm";
 
@@ -47,6 +47,7 @@ const ItemCardInteractive = ({
               basket={basket}
               setBasket={setBasket}
               item={item}
+              pricePerStepSize={pricePerStepSize}
             />
           ) : (
             <ItemNotInBasketForm
@@ -57,6 +58,7 @@ const ItemCardInteractive = ({
               basket={basket}
               setBasket={setBasket}
               item={item}
+              pricePerStepSize={pricePerStepSize}
             />
           )}
         </Card.Content>
@@ -68,7 +70,7 @@ const ItemCardInteractive = ({
       let currBasketDetails = basket.find((i) => i.item_id === item.id);
       let price = (currBasketDetails.amount / stepSize) * pricePerStepSize;
       return (
-        <Card.Content floated="right" extra>
+        <Card.Content onClick={() => onCardClick()} floated="right" extra>
           <b>
             Basket: {currBasketDetails.amount}
             {units} ~ £{(Math.round(price * 100) / 100).toFixed(2)}

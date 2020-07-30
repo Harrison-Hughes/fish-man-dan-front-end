@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Item, Form, Popup } from "semantic-ui-react";
+import { Button, Icon, Label, Form, Popup } from "semantic-ui-react";
 import NumericInput from "react-numeric-input";
 
 const ItemInBasketForm = ({
@@ -10,6 +10,7 @@ const ItemInBasketForm = ({
   basket,
   setBasket,
   item,
+  pricePerStepSize,
 }) => {
   const [formData, setFormData] = useState({
     item_id: item.id,
@@ -17,7 +18,6 @@ const ItemInBasketForm = ({
     note: "",
   });
   const [editBasketEnabled, setEditBasketEnabled] = useState(false);
-  // const [removeFromBasketEnabled, setRemoveFromBasketEnabled] = useState(true);
 
   useEffect(() => {
     if (
@@ -37,7 +37,7 @@ const ItemInBasketForm = ({
 
   const handleEditBasket = (e) => {
     e.preventDefault();
-    let basketIndexOfItem = basket.findIndex((i) => i.item_id == item.id);
+    let basketIndexOfItem = basket.findIndex((i) => i.item_id === item.id);
     setBasket(
       Object.assign([], basket, {
         [basketIndexOfItem]: {
@@ -62,6 +62,11 @@ const ItemInBasketForm = ({
     setFormData({ ...formData, amount: amount });
   };
 
+  const currentPriceOfItem = () => {
+    let price = (formData["amount"] / stepSize) * pricePerStepSize;
+    return (Math.round(price * 100) / 100).toFixed(2);
+  };
+
   return (
     <Form size="small" onSubmit={handleEditBasket}>
       <Form.Group>
@@ -80,21 +85,27 @@ const ItemInBasketForm = ({
           name="note"
           onChange={handleChange}
         />
-        <Button disabled={!editBasketEnabled} content="update" type="submit" />
+        <Button
+          positive
+          disabled={!editBasketEnabled}
+          content="update"
+          type="submit"
+        />
         <Popup
           trigger={
-            <Button
-              color="red"
-              icon
-              // disabled={!removeFromBasketEnabled}
-              onClick={handleRemoveFromBasket}
-            >
+            <Button color="red" icon onClick={handleRemoveFromBasket}>
               <Icon name="trash alternate" />
             </Button>
           }
           content="remove from basket"
           basic
         />
+        {/* <Label size="medium" float="right">
+          £{currentPriceOfItem()}
+        </Label> */}
+        <Button disabled basic floated="right">
+          £{currentPriceOfItem()}
+        </Button>
       </Form.Group>
     </Form>
   );

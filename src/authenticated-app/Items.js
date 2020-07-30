@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import API from "../adapters/API";
 import ItemCardInteractive from "./ItemCardInteractive";
 import ItemCardView from "./ItemCardView";
-import { Button, Icon, Image, Item, Label, Card } from "semantic-ui-react";
+import { Card } from "semantic-ui-react";
 
-const Items = ({ setUser, setError, basket, setBasket, mode }) => {
+const Items = ({ setUser, setError, basket, setBasket, interactive }) => {
   const [items, setItems] = useState([]);
   const [selectedItemID, setSelectedItemID] = useState(null);
 
@@ -23,7 +23,7 @@ const Items = ({ setUser, setError, basket, setBasket, mode }) => {
   }, [setUser, setError]);
 
   const itemsType = () => {
-    if (mode == "view")
+    if (!interactive)
       return (
         <Card.Group>
           {items.map((i) => (
@@ -36,7 +36,7 @@ const Items = ({ setUser, setError, basket, setBasket, mode }) => {
           ))}
         </Card.Group>
       );
-    else if (mode == "interact")
+    else if (interactive)
       return (
         <Card.Group>
           {items.map((i) => (

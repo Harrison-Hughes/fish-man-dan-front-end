@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Item, Form } from "semantic-ui-react";
+import { Button, Form } from "semantic-ui-react";
 import NumericInput from "react-numeric-input";
 
 const ItemNotInBasketForm = ({
@@ -10,6 +10,7 @@ const ItemNotInBasketForm = ({
   basket,
   setBasket,
   item,
+  pricePerStepSize,
 }) => {
   const [formData, setFormData] = useState({
     item_id: item.id,
@@ -46,6 +47,11 @@ const ItemNotInBasketForm = ({
 
   const handleAmountChange = (amount) => {
     setFormData({ ...formData, amount: amount });
+  };
+
+  const currentPriceOfItem = () => {
+    let price = (formData["amount"] / stepSize) * pricePerStepSize;
+    return (Math.round(price * 100) / 100).toFixed(2);
   };
 
   return (

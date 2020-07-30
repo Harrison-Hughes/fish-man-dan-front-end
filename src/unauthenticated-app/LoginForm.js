@@ -18,14 +18,29 @@ const LogInForm = ({ setError, setUser, changeToSignup }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("logging in with", formData["email"], formData["password"]);
     API.signin(formData)
       .then((user) => {
-        setUser(user);
+        console.log("user", user);
+        if (!!user.message) {
+          console.log(user.message);
+          setFormData({ email: "", password: "" });
+          setError({
+            message: user.message,
+          });
+        } else if (!!user) {
+          console.log("user found");
+          setUser(user);
+          setError(false);
+        } else {
+          setFormData({ email: "", password: "" });
+          setError({
+            message: "Server is currently offline. Please try later",
+          });
+        }
       })
-      .then(() => setError(false))
       .catch((errorPromise) => {
-        setError(errorPromise);
+        console.log("errorPromise", errorPromise);
+        errorPromise.then(setError);
       });
   };
 
@@ -37,22 +52,21 @@ const LogInForm = ({ setError, setUser, changeToSignup }) => {
             <Form.Input
               icon="mail"
               iconPosition="left"
-              // label="e-mail"
               placeholder="e-mail"
               name="email"
+              value={formData["email"]}
               onChange={handleChange}
             />
             <Form.Input
               icon="lock"
               iconPosition="left"
-              // label="password"
               placeholder="password"
               type="password"
               name="password"
+              value={formData["password"]}
               onChange={handleChange}
             />
             <Button disabled={!loginEnabled} content="log in" primary />
-            {/* <Button circular icon="question circle outline"></Button> */}
           </Form>
         </Grid.Column>
 

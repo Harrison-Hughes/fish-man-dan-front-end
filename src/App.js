@@ -13,6 +13,7 @@ const App = () => {
   const logOut = () => {
     setUser(false);
     API.clearToken();
+    localStorage.removeItem("fishManDanToken");
   };
 
   useEffect(() => {

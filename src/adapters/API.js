@@ -22,7 +22,15 @@ const signin = (user) =>
     body: JSON.stringify({ user }),
   })
     .then(jsonify)
-    .then(handleUserResponse);
+    .then((r) => {
+      console.log(r);
+      return r;
+    })
+    .then(handleUserResponse)
+    .catch((r) => {
+      console.log("APIcatch", r);
+      return r;
+    });
 
 const signup = (user) =>
   fetch(`${API_ROOT}/signup`, {
