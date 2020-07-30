@@ -14,9 +14,8 @@ const SignupForm = ({ setError, setUser, changeToLogin }) => {
 
   useEffect(() => {
     if (
-      validateEmail(formData["email"]) &&
       formData["password"].length > 5 &&
-      formData["password_confirmation"].length > 1
+      formData["password_confirmation"].length > 0
     ) {
       setSignupEnabled(true);
     } else setSignupEnabled(false);
@@ -97,7 +96,7 @@ const SignupForm = ({ setError, setUser, changeToLogin }) => {
                 // label="password confirm"
                 placeholder="password confirmation"
                 type="password"
-                name="password confirmation"
+                name="password_confirmation"
                 onChange={handleChange}
               />
             </Form.Group>

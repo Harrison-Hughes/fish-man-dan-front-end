@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Item, Form } from "semantic-ui-react";
+import { Button, Form } from "semantic-ui-react";
 import NumericInput from "react-numeric-input";
 
 const ItemNotInBasketForm = ({
@@ -10,6 +10,7 @@ const ItemNotInBasketForm = ({
   basket,
   setBasket,
   item,
+  pricePerStepSize,
 }) => {
   const [formData, setFormData] = useState({
     item_id: item.id,
@@ -30,31 +31,23 @@ const ItemNotInBasketForm = ({
 
   const handleAddToBasket = (event) => {
     event.preventDefault();
-    let basketIndexOfItem = basket.findIndex((i) => i.item_id == item.id);
-    if (basketIndexOfItem >= 0) {
-      setBasket(
-        Object.assign([], basket, {
-          [basketIndexOfItem]: {
-            item_id: formData["item_id"],
-            amount: formData["amount"],
-            note: formData["note"],
-          },
-        })
-      );
-    } else {
-      setBasket([
-        ...basket,
-        {
-          item_id: formData["item_id"],
-          amount: formData["amount"],
-          note: formData["note"],
-        },
-      ]);
-    }
+    setBasket([
+      ...basket,
+      {
+        item_id: formData["item_id"],
+        amount: formData["amount"],
+        note: formData["note"],
+      },
+    ]);
+  };
+
+  const currentPriceOfItem = () => {
+    let price = (formData["amount"] / stepSize) * pricePerStepSize;
+    return (Math.round(price * 100) / 100).toFixed(2);
   };
 
   const myFormat = (num) => {
-    return num + units;
+    return num + units + "  ~  £" + currentPriceOfItem();
   };
 
   const handleAmountChange = (amount) => {
@@ -64,7 +57,6 @@ const ItemNotInBasketForm = ({
   return (
     <Form size="small" onSubmit={handleAddToBasket}>
       <Form.Group>
-        {/* <Form.Input name="amount" onChange={handleChange} /> */}
         <NumericInput
           name="amount"
           onChange={handleAmountChange}
