@@ -20,10 +20,14 @@ const ItemNotInBasketForm = ({
   const [addToBasketEnabled, setAddToBasketEnabled] = useState(false);
 
   useEffect(() => {
-    if (formData["amount"] > min && formData["amount"] % stepSize === 0) {
+    if (
+      formData["amount"] > min &&
+      formData["amount"] < max &&
+      formData["amount"] % stepSize === 0
+    ) {
       setAddToBasketEnabled(true);
     } else setAddToBasketEnabled(false);
-  }, [formData]);
+  }, [formData, min, max, stepSize]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

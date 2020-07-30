@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Icon, Label, Form, Popup } from "semantic-ui-react";
+import { Button, Icon, Form, Popup } from "semantic-ui-react";
 import NumericInput from "react-numeric-input";
 
 const ItemInBasketForm = ({
@@ -29,7 +29,7 @@ const ItemInBasketForm = ({
     ) {
       setEditBasketEnabled(true);
     } else setEditBasketEnabled(false);
-  }, [formData, basket]);
+  }, [formData, basket, item.id, min, stepSize]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

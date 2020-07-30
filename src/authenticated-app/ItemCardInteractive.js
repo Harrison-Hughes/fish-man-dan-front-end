@@ -19,7 +19,7 @@ const ItemCardInteractive = ({
   ];
 
   const itemInBasket = () => {
-    return !!basket.find((i) => i.item_id == item.id);
+    return !!basket.find((i) => i.item_id === item.id);
   };
 
   const inBasketLabel = () => {
