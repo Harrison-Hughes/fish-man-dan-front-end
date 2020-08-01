@@ -15,7 +15,6 @@ const ItemNotInBasketForm = ({
   const [formData, setFormData] = useState({
     item_id: item.id,
     amount: 0,
-    note: "",
   });
   const [addToBasketEnabled, setAddToBasketEnabled] = useState(false);
 
@@ -40,7 +39,6 @@ const ItemNotInBasketForm = ({
       {
         item_id: formData["item_id"],
         amount: formData["amount"],
-        note: formData["note"],
       },
     ]);
   };
@@ -70,11 +68,6 @@ const ItemNotInBasketForm = ({
           step={stepSize}
           format={myFormat}
           snap
-        />
-        <Form.Input
-          placeholder="note (optional)"
-          name="note"
-          onChange={handleChange}
         />
         <Button
           disabled={!addToBasketEnabled}

@@ -44,7 +44,14 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
         />
       );
     else if (bodyType === "basket")
-      return <Basket user={user} basket={basket} setBasket={setBasket} />;
+      return (
+        <Basket
+          user={user}
+          items={items}
+          basket={basket}
+          setBasket={setBasket}
+        />
+      );
     else if (bodyType === "profile") return <div></div>;
   };
 

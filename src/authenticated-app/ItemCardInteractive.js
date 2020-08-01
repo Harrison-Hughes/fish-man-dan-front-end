@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Label } from "semantic-ui-react";
+import { Card, Label, Icon } from "semantic-ui-react";
 import ItemNotInBasketForm from "./item-card-interactive/ItemNotInBasketForm";
 import ItemInBasketForm from "./item-card-interactive/ItemInBasketForm";
 
@@ -11,10 +11,10 @@ const ItemCardInteractive = ({
   setSelectedItemID,
 }) => {
   const [min, max, stepSize, units, pricePerStepSize] = [
-    0,
-    5000,
-    500,
-    "g",
+    parseFloat(item.min),
+    parseFloat(item.max),
+    1,
+    "kg",
     4.1,
   ];
 
@@ -32,6 +32,11 @@ const ItemCardInteractive = ({
     if (selectedItemID === item.id) {
       setSelectedItemID(null);
     } else setSelectedItemID(item.id);
+  };
+
+  const isFluid = () => {
+    if (selectedItemID === item.id) return true;
+    else return false;
   };
 
   const selectedCardForm = () => {
@@ -76,29 +81,52 @@ const ItemCardInteractive = ({
             {units} ~ £{(Math.round(price * 100) / 100).toFixed(2)}
           </b>
           <br />
-          <b>
-            {!!currBasketDetails.note
-              ? "Note: " + currBasketDetails.note
-              : null}
-          </b>
         </Card.Content>
       );
     }
   };
 
+  const metaContent = () => {
+    if (item.price_by_each) {
+      return `£${parseFloat(item.price_per).toFixed(2)} each`;
+    } else return `£${parseFloat(item.price_per).toFixed(2)} per. kg`;
+  };
+
+  const freshTag = () => {
+    if (!!item.fresh)
+      return <Label color="olive">{item.fresh.toLowerCase()}</Label>;
+  };
+
+  const gradeTag = () => {
+    if (!!item.grade)
+      return <Label color="orange">{item.grade.toLowerCase()}</Label>;
+  };
+
+  const frozenTag = () => {
+    if (item.is_frozen) {
+      return <Label color="teal">frozen</Label>;
+    }
+  };
+
   return (
-    <Card link fluid>
+    <Card
+      link
+      // fluid={isFluid()}
+    >
       {inBasketLabel()}
       <Card.Content onClick={() => onCardClick()}>
         <Card.Header>{item.name}</Card.Header>
         <Card.Meta>
-          <span className="meta">
-            £{(Math.round(pricePerStepSize * 100) / 100).toFixed(2)} per{" "}
-            {stepSize}
-            {units}
-          </span>
+          <span className="meta">Price: {metaContent()}</span>
         </Card.Meta>
-        <Card.Description>{item.description}</Card.Description>
+        <Card.Meta>
+          <span className="meta">Size: {item.size}</span>
+        </Card.Meta>
+        <Card.Description>
+          {gradeTag()}
+          {frozenTag()}
+          {freshTag()}
+        </Card.Description>
       </Card.Content>
       {selectedCardForm()}
       {currentDetailsOfItemInBasket()}

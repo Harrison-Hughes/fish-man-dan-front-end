@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Icon, Form, Popup } from "semantic-ui-react";
-import NumericInput from "react-numeric-input";
+// import NumericInput from "react-numeric-input";
 
 const ItemInBasketForm = ({
   min,
   max,
   stepSize,
-  units,
+  // units,
   basket,
   setBasket,
   item,
@@ -15,7 +15,6 @@ const ItemInBasketForm = ({
   const [formData, setFormData] = useState({
     item_id: item.id,
     amount: basket.find((i) => i.item_id === item.id).amount,
-    note: "",
   });
   const [editBasketEnabled, setEditBasketEnabled] = useState(false);
 
@@ -23,17 +22,15 @@ const ItemInBasketForm = ({
     if (
       formData["amount"] > min &&
       formData["amount"] % stepSize === 0 &&
-      (formData["amount"] !==
-        basket.find((i) => i.item_id === item.id).amount ||
-        formData["note"] !== basket.find((i) => i.item_id === item.id).note)
+      formData["amount"] !== basket.find((i) => i.item_id === item.id).amount
     ) {
       setEditBasketEnabled(true);
     } else setEditBasketEnabled(false);
   }, [formData, basket, item.id, min, stepSize]);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
 
   const handleEditBasket = (e) => {
     e.preventDefault();
@@ -43,7 +40,6 @@ const ItemInBasketForm = ({
         [basketIndexOfItem]: {
           item_id: formData["item_id"],
           amount: formData["amount"],
-          note: formData["note"],
         },
       })
     );
@@ -59,18 +55,111 @@ const ItemInBasketForm = ({
     setBasket(basket.filter((i) => i.item_id !== item.id));
   };
 
-  const myFormat = (num) => {
-    return num + units + "  ~  £" + currentPriceOfItem();
+  // const myFormat = (num) => {
+  //   return num + units + "  ~  £" + currentPriceOfItem();
+  // };
+
+  // const handleAmountChange = (amount) => {
+  //   setFormData({ ...formData, amount: amount });
+  // };
+
+  const handleIntAmountDecrement = () => {
+    let currAmount = formData["amount"];
+    setFormData({ ...formData, amount: currAmount - 1 });
   };
 
-  const handleAmountChange = (amount) => {
-    setFormData({ ...formData, amount: amount });
+  const handleIntAmountIncrement = () => {
+    let currAmount = formData["amount"];
+    setFormData({ ...formData, amount: currAmount + 1 });
+  };
+
+  const handleCompAmountDecrement = () => {
+    let currAmount = formData["amount"];
+    setFormData({ ...formData, amount: currAmount - 1 });
+  };
+
+  const handleCompAmountIncrement = () => {
+    let currAmount = formData["amount"];
+    setFormData({ ...formData, amount: currAmount + 1 });
+  };
+
+  const amountField = () => {
+    if (item.price_by_each) {
+      return (
+        <Button.Group>
+          <Button
+            type="button"
+            icon
+            onClick={handleIntAmountDecrement}
+            disabled={formData["amount"] === min}
+          >
+            <Icon name="minus" />
+          </Button>
+          <Button type="button" basic color="black">
+            {formData["amount"]}
+          </Button>
+          <Button
+            type="button"
+            icon
+            disabled={formData["amount"] === max}
+            onClick={handleIntAmountIncrement}
+          >
+            <Icon name="plus" />
+          </Button>
+        </Button.Group>
+      );
+    } else
+      return (
+        <Button.Group>
+          <Button
+            type="button"
+            icon
+            onClick={handleCompAmountDecrement}
+            disabled={formData["amount"] === min}
+          >
+            <Icon name="minus" />
+          </Button>
+          <Button type="button" basic color="black">
+            {formData["amount"]}
+          </Button>
+          <Button
+            type="button"
+            icon
+            disabled={formData["amount"] === max}
+            onClick={handleCompAmountIncrement}
+          >
+            <Icon name="plus" />
+          </Button>
+        </Button.Group>
+      );
   };
 
   return (
     <Form size="small" onSubmit={handleEditBasket}>
       <Form.Group>
-        <NumericInput
+        {amountField()}
+        {/* <Button.Group>
+          <Button
+            type="button"
+            icon
+            onClick={handleAmountDecrement}
+            disabled={formData["amount"] === min}
+          >
+            <Icon name="minus" />
+          </Button>
+          <Button type="button" basic color="black">
+            {formData["amount"]}
+          </Button>
+          <Button
+            type="button"
+            icon
+            disabled={formData["amount"] === max}
+            onClick={handleAmountIncrement}
+          >
+            <Icon name="plus" />
+          </Button>
+        </Button.Group> */}
+        {/* <NumericInput
           name="amount"
           onChange={handleAmountChange}
           min={min}
@@ -79,12 +168,7 @@ const ItemInBasketForm = ({
           step={stepSize}
           format={myFormat}
           snap
-        />
-        <Form.Input
-          placeholder="note (optional)"
-          name="note"
-          onChange={handleChange}
-        />
+        /> */}
         <Button
           positive
           disabled={!editBasketEnabled}
