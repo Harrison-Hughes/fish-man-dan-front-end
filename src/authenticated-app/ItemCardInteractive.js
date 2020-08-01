@@ -10,13 +10,11 @@ const ItemCardInteractive = ({
   selectedItemID,
   setSelectedItemID,
 }) => {
-  const [min, max, stepSize, units, pricePerStepSize] = [
-    parseFloat(item.min),
-    parseFloat(item.max),
-    1,
-    "kg",
-    4.1,
-  ];
+  // const [min, max, price_per] = [
+  //   parseFloat(item.min),
+  //   parseFloat(item.max),
+  //   parseFloat(item.price_per),
+  // ];
 
   const itemInBasket = () => {
     return !!basket.find((i) => i.item_id === item.id);
@@ -34,10 +32,10 @@ const ItemCardInteractive = ({
     } else setSelectedItemID(item.id);
   };
 
-  const isFluid = () => {
-    if (selectedItemID === item.id) return true;
-    else return false;
-  };
+  // const isFluid = () => {
+  //   if (selectedItemID === item.id) return true;
+  //   else return false;
+  // };
 
   const selectedCardForm = () => {
     if (selectedItemID === item.id)
@@ -45,25 +43,15 @@ const ItemCardInteractive = ({
         <Card.Content extra>
           {itemInBasket() ? (
             <ItemInBasketForm
-              min={min}
-              max={max}
-              stepSize={stepSize}
-              units={units}
               basket={basket}
               setBasket={setBasket}
               item={item}
-              pricePerStepSize={pricePerStepSize}
             />
           ) : (
             <ItemNotInBasketForm
-              min={min}
-              max={max}
-              stepSize={stepSize}
-              units={units}
               basket={basket}
               setBasket={setBasket}
               item={item}
-              pricePerStepSize={pricePerStepSize}
             />
           )}
         </Card.Content>
@@ -73,14 +61,13 @@ const ItemCardInteractive = ({
   const currentDetailsOfItemInBasket = () => {
     if (itemInBasket()) {
       let currBasketDetails = basket.find((i) => i.item_id === item.id);
-      let price = (currBasketDetails.amount / stepSize) * pricePerStepSize;
+      let price = currBasketDetails.amount * parseFloat(item.price_per);
       return (
         <Card.Content onClick={() => onCardClick()} floated="right" extra>
           <b>
-            Basket: {currBasketDetails.amount}
-            {units} ~ £{(Math.round(price * 100) / 100).toFixed(2)}
+            Basket: x{currBasketDetails.amount} ~ £
+            {(Math.round(price * 100) / 100).toFixed(2)}
           </b>
-          <br />
         </Card.Content>
       );
     }
@@ -94,7 +81,7 @@ const ItemCardInteractive = ({
 
   const freshTag = () => {
     if (!!item.fresh)
-      return <Label color="olive">{item.fresh.toLowerCase()}</Label>;
+      return <Label color="green">{item.fresh.toLowerCase()}</Label>;
   };
 
   const gradeTag = () => {

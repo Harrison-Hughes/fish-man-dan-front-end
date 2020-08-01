@@ -2,16 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button, Icon, Form, Popup } from "semantic-ui-react";
 // import NumericInput from "react-numeric-input";
 
-const ItemInBasketForm = ({
-  min,
-  max,
-  stepSize,
-  // units,
-  basket,
-  setBasket,
-  item,
-  pricePerStepSize,
-}) => {
+const ItemInBasketForm = ({ basket, setBasket, item }) => {
+  const [min, max, price_per] = [
+    parseFloat(item.min),
+    parseFloat(item.max),
+    parseFloat(item.price_per),
+  ];
   const [formData, setFormData] = useState({
     item_id: item.id,
     amount: basket.find((i) => i.item_id === item.id).amount,
@@ -21,12 +17,11 @@ const ItemInBasketForm = ({
   useEffect(() => {
     if (
       formData["amount"] > min &&
-      formData["amount"] % stepSize === 0 &&
       formData["amount"] !== basket.find((i) => i.item_id === item.id).amount
     ) {
       setEditBasketEnabled(true);
     } else setEditBasketEnabled(false);
-  }, [formData, basket, item.id, min, stepSize]);
+  }, [formData, basket, item]);
 
   // const handleChange = (e) => {
   //   setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,10 +40,10 @@ const ItemInBasketForm = ({
     );
   };
 
-  const currentPriceOfItem = () => {
-    let price = (formData["amount"] / stepSize) * pricePerStepSize;
-    return (Math.round(price * 100) / 100).toFixed(2);
-  };
+  // const currentPriceOfItem = () => {
+  //   let price = (formData["amount"] / stepSize) * pricePerStepSize;
+  //   return (Math.round(price * 100) / 100).toFixed(2);
+  // };
 
   const handleRemoveFromBasket = (e) => {
     e.preventDefault();
