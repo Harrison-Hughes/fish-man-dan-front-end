@@ -1,7 +1,7 @@
 import React from "react";
 import { Popup, Button, Icon } from "semantic-ui-react";
 
-const Navbar = ({ user, logOut, bodyType, setBodyType }) => {
+const Navbar = ({ logOut, bodyType, setBodyType }) => {
   return (
     <div className="navbar">
       {/* <h3>curr user: {user.full_name}</h3> */}

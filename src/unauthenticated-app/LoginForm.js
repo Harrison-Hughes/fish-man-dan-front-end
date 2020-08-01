@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Divider, Form, Grid, Segment, Icon } from "semantic-ui-react";
+import { Button, Divider, Form, Grid, Segment } from "semantic-ui-react";
 import API from "../adapters/API";
 
 const LogInForm = ({ setError, setUser, changeToSignup }) => {
@@ -86,6 +86,7 @@ const LogInForm = ({ setError, setUser, changeToSignup }) => {
 };
 
 const validateEmail = (email) => {
+  // eslint-disable-next-line
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };

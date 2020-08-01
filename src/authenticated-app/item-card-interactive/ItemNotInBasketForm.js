@@ -15,15 +15,18 @@ const ItemNotInBasketForm = ({
   const [formData, setFormData] = useState({
     item_id: item.id,
     amount: 0,
-    note: "",
   });
   const [addToBasketEnabled, setAddToBasketEnabled] = useState(false);
 
   useEffect(() => {
-    if (formData["amount"] > min && formData["amount"] % stepSize === 0) {
+    if (
+      formData["amount"] > min &&
+      formData["amount"] < max &&
+      formData["amount"] % stepSize === 0
+    ) {
       setAddToBasketEnabled(true);
     } else setAddToBasketEnabled(false);
-  }, [formData]);
+  }, [formData, min, max, stepSize]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +39,6 @@ const ItemNotInBasketForm = ({
       {
         item_id: formData["item_id"],
         amount: formData["amount"],
-        note: formData["note"],
       },
     ]);
   };
@@ -66,11 +68,6 @@ const ItemNotInBasketForm = ({
           step={stepSize}
           format={myFormat}
           snap
-        />
-        <Form.Input
-          placeholder="note (optional)"
-          name="note"
-          onChange={handleChange}
         />
         <Button
           disabled={!addToBasketEnabled}

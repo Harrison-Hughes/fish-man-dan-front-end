@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
+import API from "../adapters/API";
 import Items from "./Items";
 import Navbar from "../Navbar";
+import Basket from "./basket/Basket";
 
 const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
+  const [items, setItems] = useState([]);
   const [basket, setBasket] = useState([]);
   const [bodyType, setBodyType] = useState("browse");
+
+  useEffect(() => {
+    API.getItems()
+      .then(setItems)
+      .catch((errorPromise) => {
+        console.log("ERROR");
+        setUser(false);
+        if (!errorPromise) errorPromise.then(setError);
+        else
+          setError({
+            message: "Server is currently offline. Please try later",
+          });
+      });
+  }, [user, setUser, setError]);
 
   useEffect(() => {
     if (!!localStorage.fishManDanLocalBasket) {
@@ -20,15 +37,21 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
     if (bodyType === "browse")
       return (
         <Items
+          items={items}
           interactive={true}
-          setUser={setUser}
-          setError={setError}
           basket={basket}
           setBasket={setBasket}
-          setBodyType={setBodyType}
         />
       );
-    else if (bodyType === "basket") return <div></div>;
+    else if (bodyType === "basket")
+      return (
+        <Basket
+          user={user}
+          items={items}
+          basket={basket}
+          setBasket={setBasket}
+        />
+      );
     else if (bodyType === "profile") return <div></div>;
   };
 
