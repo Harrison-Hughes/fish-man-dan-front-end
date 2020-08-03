@@ -1,7 +1,9 @@
 import React from "react";
-import { Card, Label, Icon } from "semantic-ui-react";
+import { Card, Label } from "semantic-ui-react";
 import ItemNotInBasketForm from "./item-card-interactive/ItemNotInBasketForm";
 import ItemInBasketForm from "./item-card-interactive/ItemInBasketForm";
+import ItemInBasketCustomForm from "./item-card-interactive/ItemInBasketCustomForm";
+import ItemNotInBasketCustomForm from "./item-card-interactive/ItemNotInBasketCustomForm";
 
 const ItemCardInteractive = ({
   item,
@@ -10,12 +12,6 @@ const ItemCardInteractive = ({
   selectedItemID,
   setSelectedItemID,
 }) => {
-  // const [min, max, price_per] = [
-  //   parseFloat(item.min),
-  //   parseFloat(item.max),
-  //   parseFloat(item.price_per),
-  // ];
-
   const itemInBasket = () => {
     return !!basket.find((i) => i.item_id === item.id);
   };
@@ -39,37 +35,59 @@ const ItemCardInteractive = ({
 
   const selectedCardForm = () => {
     if (selectedItemID === item.id)
-      return (
-        <Card.Content extra>
-          {itemInBasket() ? (
-            <ItemInBasketForm
-              basket={basket}
-              setBasket={setBasket}
-              item={item}
-            />
-          ) : (
-            <ItemNotInBasketForm
-              basket={basket}
-              setBasket={setBasket}
-              item={item}
-            />
-          )}
-        </Card.Content>
-      );
+      if (item.custom_amount) {
+        return (
+          <Card.Content extra>
+            {itemInBasket() ? (
+              <ItemInBasketCustomForm
+                basket={basket}
+                setBasket={setBasket}
+                item={item}
+              />
+            ) : (
+              <ItemNotInBasketCustomForm
+                basket={basket}
+                setBasket={setBasket}
+                item={item}
+              />
+            )}
+          </Card.Content>
+        );
+      } else
+        return (
+          <Card.Content extra>
+            {itemInBasket() ? (
+              <ItemInBasketForm
+                basket={basket}
+                setBasket={setBasket}
+                item={item}
+              />
+            ) : (
+              <ItemNotInBasketForm
+                basket={basket}
+                setBasket={setBasket}
+                item={item}
+              />
+            )}
+          </Card.Content>
+        );
   };
 
   const currentDetailsOfItemInBasket = () => {
     if (itemInBasket()) {
       let currBasketDetails = basket.find((i) => i.item_id === item.id);
-      let price = currBasketDetails.amount * parseFloat(item.price_per);
-      return (
-        <Card.Content onClick={() => onCardClick()} floated="right" extra>
-          <b>
-            Basket: x{currBasketDetails.amount} ~ £
-            {(Math.round(price * 100) / 100).toFixed(2)}
-          </b>
-        </Card.Content>
-      );
+      if (item.custom_amount) {
+        return (
+          <Card.Content onClick={() => onCardClick()} floated="right" extra>
+            <b>Current request: {currBasketDetails.amount}</b>
+          </Card.Content>
+        );
+      } else
+        return (
+          <Card.Content onClick={() => onCardClick()} floated="right" extra>
+            <b>Currently in basket: x{currBasketDetails.amount}</b>
+          </Card.Content>
+        );
     }
   };
 
