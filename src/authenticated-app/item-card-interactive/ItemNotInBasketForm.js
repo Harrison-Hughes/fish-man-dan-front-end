@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Button, Form, Icon } from "semantic-ui-react";
-import NumericInput from "react-numeric-input";
 
 const ItemNotInBasketForm = ({ basket, setBasket, item }) => {
   const [min, max] = [parseFloat(item.min), parseFloat(item.max)];
@@ -30,19 +29,6 @@ const ItemNotInBasketForm = ({ basket, setBasket, item }) => {
       },
     ]);
   };
-
-  // const currentPriceOfItem = () => {
-  //   let price = (formData["amount"] / stepSize) * pricePerStepSize;
-  //   return (Math.round(price * 100) / 100).toFixed(2);
-  // };
-
-  // const myFormat = (num) => {
-  //   return num + units + "  ~  £" + currentPriceOfItem();
-  // };
-
-  // const handleAmountChange = (amount) => {
-  //   setFormData({ ...formData, amount: amount });
-  // };
 
   const handleIntAmountDecrement = () => {
     let currAmount = formData["amount"];
@@ -84,16 +70,6 @@ const ItemNotInBasketForm = ({ basket, setBasket, item }) => {
     <Form size="small" onSubmit={handleAddToBasket}>
       <Form.Group>
         {amountField()}
-        {/* <NumericInput
-          name="amount"
-          onChange={handleAmountChange}
-          min={min}
-          max={max}
-          value={formData["amount"]}
-          step={stepSize}
-          format={myFormat}
-          snap
-        /> */}
         <Button
           disabled={!addToBasketEnabled}
           content="add to basket"
