@@ -3,6 +3,7 @@ import API from "../adapters/API";
 import Items from "./Items";
 import Navbar from "../Navbar";
 import Basket from "./basket/Basket";
+import Profile from "./profile/Profile";
 
 const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
   const [items, setItems] = useState([]);
@@ -50,9 +51,11 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
           items={items}
           basket={basket}
           setBasket={setBasket}
+          setBodyType={setBodyType}
         />
       );
-    else if (bodyType === "profile") return <div></div>;
+    else if (bodyType === "profile")
+      return <Profile setError={setError} user={user} />;
   };
 
   return (
