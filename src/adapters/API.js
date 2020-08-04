@@ -55,11 +55,21 @@ const getItems = () =>
     headers: HEADERS_AUTH,
   }).then(jsonify);
 
+const newAddress = (address) =>
+  fetch(`${API_ROOT}/addresses`, {
+    method: "POST",
+    headers: HEADERS_AUTH,
+    body: JSON.stringify({ address }),
+  })
+    .then(jsonify)
+    .then(handleUserResponse);
+
 export default {
   signin,
   signup,
   validate,
   getItems,
+  newAddress,
   hasToken: !!localStorage.fishManDanToken,
   clearToken: () => localStorage.removeItem("fishManDanToken"),
 };

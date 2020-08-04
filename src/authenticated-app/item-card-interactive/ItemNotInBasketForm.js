@@ -15,10 +15,6 @@ const ItemNotInBasketForm = ({ basket, setBasket, item }) => {
     } else setAddToBasketEnabled(false);
   }, [formData, min, max]);
 
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.name]: e.target.value });
-  // };
-
   const handleAddToBasket = (event) => {
     event.preventDefault();
     setBasket([
