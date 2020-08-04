@@ -1,61 +1,64 @@
 import React, { useState } from "react";
-import { Card, Feed, Button, Message } from "semantic-ui-react";
+import { Card, Button, Message, Confirm } from "semantic-ui-react";
 import NewAddressCard from "./NewAddressCard";
+import API from "../../adapters/API";
+import AddressCard from "./AddressCard";
 
 const AddressBook = ({ user, setError }) => {
   const [message, setMessage] = useState(false);
   const [mode, setMode] = useState("view");
   const [addresses, setAddresses] = useState(user.addresses);
+  const [addressToDeleteID, setAddressToDeleteID] = useState(null);
+  const [confirmDeleteAddress, setConfirmDeleteAddress] = useState(false);
+
+  const initDeleteAddressConfirm = (addressID) => {
+    setAddressToDeleteID(addressID);
+    setConfirmDeleteAddress(true);
+  };
+
+  const deleteAddress = () => {
+    API.deleteAddress(addressToDeleteID).then((resp) => {
+      if (!!resp.success) {
+        setAddresses(
+          addresses.filter((address) => address.id !== addressToDeleteID)
+        );
+        setMessage({ type: "positive", header: "Address succesfully deleted" });
+      }
+    });
+  };
+
+  const newAddressCard = () => {
+    return (
+      <NewAddressCard
+        user={user}
+        setError={setError}
+        setMode={setMode}
+        setMessage={setMessage}
+        addresses={addresses}
+        setAddresses={setAddresses}
+      />
+    );
+  };
 
   const renderAddressTiles = () => {
     if (addresses.length === 0) {
       return (
-        <Card>
+        <Card fluid>
           <Card.Content>
-            <Card.Header>You have no adresses yet - add one below!</Card.Header>
+            <Card.Header>
+              You have no adresses yet - click "new address" below to add one
+            </Card.Header>
           </Card.Content>
         </Card>
       );
     } else
       return addresses.map((address) => (
-        <Card key={address.id}>
-          <Card.Content>
-            <Feed>
-              <Feed.Event>
-                <Feed.Content>
-                  <Feed.Summary>{user.full_name}</Feed.Summary>
-                </Feed.Content>
-              </Feed.Event>
-              <Feed.Event>{address.line_one}</Feed.Event>
-              {!!address.line_two ? (
-                <Feed.Event>{address.line_two}</Feed.Event>
-              ) : null}
-              <Feed.Event>
-                {address.town_city}, {address.county}
-              </Feed.Event>
-              <Feed.Event>{address.postcode}</Feed.Event>
-              <Feed.Event>Contact number: {address.contact_number}</Feed.Event>
-              <Feed.Event>
-                <Button
-                  basic
-                  size="tiny"
-                  onClick={() => console.log("edit")}
-                  positive
-                >
-                  edit
-                </Button>
-                <Button
-                  basic
-                  size="tiny"
-                  onClick={() => console.log("delete")}
-                  negative
-                >
-                  delete
-                </Button>
-              </Feed.Event>
-            </Feed>
-          </Card.Content>
-        </Card>
+        <AddressCard
+          key={address.id}
+          user={user}
+          initDeleteAddressConfirm={initDeleteAddressConfirm}
+          address={address}
+        />
       ));
   };
 
@@ -72,7 +75,9 @@ const AddressBook = ({ user, setError }) => {
           ) : null}
           <h3>Current addresses</h3>
           <Card.Group>{renderAddressTiles()}</Card.Group>
-          <Button onClick={() => setMode("add")}>New address</Button>
+          <Button fluid primary onClick={() => setMode("add")}>
+            New address
+          </Button>
         </>
       );
     } else if (mode === "add") {
@@ -92,23 +97,24 @@ const AddressBook = ({ user, setError }) => {
     }
   };
 
-  const newAddressCard = () => {
-    return (
-      <NewAddressCard
-        user={user}
-        setError={setError}
-        setMode={setMode}
-        setMessage={setMessage}
-        addresses={addresses}
-        setAddresses={setAddresses}
-      />
-    );
-  };
-
   return (
     <div className="address-book">
       <h1>Address Book</h1>
       {renderMode()}
+      <Confirm
+        open={confirmDeleteAddress}
+        content="Are you sure you want to delete this address? This cannot be undone."
+        cancelButton="Cancel"
+        confirmButton="Delete"
+        onCancel={() => {
+          setAddressToDeleteID(null);
+          setConfirmDeleteAddress(false);
+        }}
+        onConfirm={() => {
+          deleteAddress();
+          setConfirmDeleteAddress(false);
+        }}
+      />
     </div>
   );
 };
