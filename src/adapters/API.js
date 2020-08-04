@@ -64,12 +64,22 @@ const newAddress = (address) =>
     .then(jsonify)
     .then(handleUserResponse);
 
+const editAddress = (address, addressID) =>
+  fetch(`${API_ROOT}/addresses/${addressID}`, {
+    method: "PATCH",
+    headers: HEADERS_AUTH,
+    body: JSON.stringify({ address }),
+  })
+    .then(jsonify)
+    .then(handleUserResponse);
+
 export default {
   signin,
   signup,
   validate,
   getItems,
   newAddress,
+  editAddress,
   hasToken: !!localStorage.fishManDanToken,
   clearToken: () => localStorage.removeItem("fishManDanToken"),
 };

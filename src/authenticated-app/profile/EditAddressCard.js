@@ -1,26 +1,20 @@
 import React, { useState } from "react";
-import { Button, Form } from "semantic-ui-react";
+import { Button, Form, Message } from "semantic-ui-react";
 import API from "../../adapters/API";
 
-const NewAddressCard = ({
-  user,
-  setError,
-  setMode,
-  setMessage,
-  addresses,
-  setAddresses,
-}) => {
+const EditAddressCard = ({ address, user, setError, setMode }) => {
   const [invalidAddressFormFields, setInvalidAddressFormFields] = useState({});
   const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
-    recipient_name: user.full_name,
-    line_one: "",
-    line_two: "",
-    town_city: "",
-    county: "",
-    postcode: "",
-    contact_number: "",
+    recipient_name: address.recipient_name,
+    line_one: address.line_one,
+    line_two: address.line_two,
+    town_city: address.town_city,
+    county: address.county,
+    postcode: address.postcode,
+    contact_number: address.contact_number,
   });
 
   function handleChange(e) {
@@ -30,7 +24,7 @@ const NewAddressCard = ({
   const handleSubmit = (event) => {
     event.preventDefault();
     setFormSubmitting(true);
-    API.newAddress(formData)
+    API.newAddress(formData, address.id)
       .then((resp) => {
         console.log(resp);
         return resp;
@@ -41,10 +35,9 @@ const NewAddressCard = ({
           setFormSubmitting(false);
           setInvalidAddressFormFields(resp.invalid_fields);
         } else {
+          console.log("valid submit");
           setFormSubmitting(false);
-          setMessage({ type: "positive", header: "Address succesfully added" });
-          setMode("view");
-          setAddresses([...addresses, resp]);
+          setFormSubmitted(true);
         }
       })
       .catch((errorPromise) => {
@@ -65,6 +58,7 @@ const NewAddressCard = ({
 
   return (
     <Form success={true} onSubmit={handleSubmit}>
+      <Message success header="Address succesfully added" />
       <Form.Group widths="equal">
         <Form.Input
           label="Recipient"
@@ -121,9 +115,9 @@ const NewAddressCard = ({
         negative
         type="button"
       />
-      <Button loading={formSubmitting} content="add address" primary />
+      <Button loading={formSubmitting} content="update address" primary />
     </Form>
   );
 };
 
-export default NewAddressCard;
+export default EditAddressCard;

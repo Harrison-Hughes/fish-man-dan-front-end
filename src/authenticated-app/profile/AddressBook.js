@@ -1,10 +1,14 @@
-import React from "react";
-import { Card, Feed, Button } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Card, Feed, Button, Message } from "semantic-ui-react";
 import NewAddressCard from "./NewAddressCard";
 
 const AddressBook = ({ user, setError }) => {
+  const [message, setMessage] = useState(false);
+  const [mode, setMode] = useState("view");
+  const [addresses, setAddresses] = useState(user.addresses);
+
   const renderAddressTiles = () => {
-    if (user.addresses.length === 0) {
+    if (addresses.length === 0) {
       return (
         <Card>
           <Card.Content>
@@ -13,7 +17,7 @@ const AddressBook = ({ user, setError }) => {
         </Card>
       );
     } else
-      return user.addresses.map((address) => (
+      return addresses.map((address) => (
         <Card key={address.id}>
           <Card.Content>
             <Feed>
@@ -55,25 +59,56 @@ const AddressBook = ({ user, setError }) => {
       ));
   };
 
+  const renderMode = () => {
+    if (mode === "view") {
+      return (
+        <>
+          {!!message ? (
+            <Message
+              positive={message.type === "positive"}
+              negative={message.type === "negative"}
+              header={message.header}
+            />
+          ) : null}
+          <h3>Current addresses</h3>
+          <Card.Group>{renderAddressTiles()}</Card.Group>
+          <Button onClick={() => setMode("add")}>New address</Button>
+        </>
+      );
+    } else if (mode === "add") {
+      return (
+        <>
+          <h3>New address</h3>
+          {newAddressCard()}
+        </>
+      );
+    } else if (mode === "edit") {
+      return (
+        <>
+          <h3>Edit address</h3>
+          {/* {editAddressCard()} */}
+        </>
+      );
+    }
+  };
+
   const newAddressCard = () => {
     return (
-      <NewAddressCard setError={setError} />
-      // {/* <Card fluid>
-      //   <Card.Content>
-      //     <Form></Form>
-      //     <Button>Add address</Button>
-      //   </Card.Content>
-      // </Card> */}
+      <NewAddressCard
+        user={user}
+        setError={setError}
+        setMode={setMode}
+        setMessage={setMessage}
+        addresses={addresses}
+        setAddresses={setAddresses}
+      />
     );
   };
 
   return (
     <div className="address-book">
       <h1>Address Book</h1>
-      <h3>Current addresses</h3>
-      <Card.Group>{renderAddressTiles()}</Card.Group>
-      <h3>New address</h3>
-      {newAddressCard()}
+      {renderMode()}
     </div>
   );
 };
