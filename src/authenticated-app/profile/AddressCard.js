@@ -1,7 +1,12 @@
 import React from "react";
 import { Card, Feed, Button } from "semantic-ui-react";
 
-const AddressCard = ({ address, user, initDeleteAddressConfirm }) => {
+const AddressCard = ({
+  address,
+  user,
+  initDeleteAddressConfirm,
+  enterEditAddressMode,
+}) => {
   return (
     <Card key={address.id}>
       <Card.Content>
@@ -24,7 +29,7 @@ const AddressCard = ({ address, user, initDeleteAddressConfirm }) => {
             <Button
               basic
               size="tiny"
-              onClick={() => console.log("edit")}
+              onClick={() => enterEditAddressMode(address.id)}
               positive
             >
               edit

@@ -32,10 +32,6 @@ const NewAddressCard = ({
     setFormSubmitting(true);
     API.newAddress(formData)
       .then((resp) => {
-        console.log(resp);
-        return resp;
-      })
-      .then((resp) => {
         if (resp.error === "invalid form fields") {
           console.log("invalid form fields detected");
           setFormSubmitting(false);
@@ -67,6 +63,7 @@ const NewAddressCard = ({
     <Form success={true} onSubmit={handleSubmit}>
       <Form.Group widths="equal">
         <Form.Input
+          required
           label="Recipient"
           name="recipient_name"
           onChange={handleChange}
@@ -74,6 +71,7 @@ const NewAddressCard = ({
           value={formData["recipient_name"]}
         />
         <Form.Input
+          required
           label="Contact number"
           name="contact_number"
           onChange={handleChange}
@@ -81,6 +79,7 @@ const NewAddressCard = ({
         />
       </Form.Group>
       <Form.Input
+        required
         label="Address line 1"
         name="line_one"
         onChange={handleChange}
@@ -94,18 +93,21 @@ const NewAddressCard = ({
       />
       <Form.Group widths="equal">
         <Form.Input
+          required
           label="Town/City"
           name="town_city"
           onChange={handleChange}
           error={errorObj("town_city")}
         />
         <Form.Input
+          required
           label="County"
           name="county"
           onChange={handleChange}
           error={errorObj("county")}
         />
         <Form.Input
+          required
           label="Postcode"
           name="postcode"
           onChange={handleChange}

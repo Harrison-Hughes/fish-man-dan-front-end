@@ -3,11 +3,13 @@ import { Card, Button, Message, Confirm } from "semantic-ui-react";
 import NewAddressCard from "./NewAddressCard";
 import API from "../../adapters/API";
 import AddressCard from "./AddressCard";
+import EditAddressCard from "./EditAddressCard";
 
 const AddressBook = ({ user, setError }) => {
   const [message, setMessage] = useState(false);
   const [mode, setMode] = useState("view");
   const [addresses, setAddresses] = useState(user.addresses);
+  const [addressToEditID, setAddressToEditID] = useState(null);
   const [addressToDeleteID, setAddressToDeleteID] = useState(null);
   const [confirmDeleteAddress, setConfirmDeleteAddress] = useState(false);
 
@@ -27,17 +29,9 @@ const AddressBook = ({ user, setError }) => {
     });
   };
 
-  const newAddressCard = () => {
-    return (
-      <NewAddressCard
-        user={user}
-        setError={setError}
-        setMode={setMode}
-        setMessage={setMessage}
-        addresses={addresses}
-        setAddresses={setAddresses}
-      />
-    );
+  const enterEditAddressMode = (addressID) => {
+    setAddressToEditID(addressID);
+    setMode("edit");
   };
 
   const renderAddressTiles = () => {
@@ -58,6 +52,7 @@ const AddressBook = ({ user, setError }) => {
           user={user}
           initDeleteAddressConfirm={initDeleteAddressConfirm}
           address={address}
+          enterEditAddressMode={enterEditAddressMode}
         />
       ));
   };
@@ -75,6 +70,7 @@ const AddressBook = ({ user, setError }) => {
           ) : null}
           <h3>Current addresses</h3>
           <Card.Group>{renderAddressTiles()}</Card.Group>
+          <br />
           <Button fluid primary onClick={() => setMode("add")}>
             New address
           </Button>
@@ -84,14 +80,30 @@ const AddressBook = ({ user, setError }) => {
       return (
         <>
           <h3>New address</h3>
-          {newAddressCard()}
+          <NewAddressCard
+            user={user}
+            setError={setError}
+            setMode={setMode}
+            setMessage={setMessage}
+            addresses={addresses}
+            setAddresses={setAddresses}
+          />
         </>
       );
     } else if (mode === "edit") {
       return (
         <>
           <h3>Edit address</h3>
-          {/* {editAddressCard()} */}
+          <EditAddressCard
+            address={addresses.find(
+              (address) => address.id === addressToEditID
+            )}
+            setError={setError}
+            setMode={setMode}
+            setMessage={setMessage}
+            addresses={addresses}
+            setAddresses={setAddresses}
+          />
         </>
       );
     }

@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Button, Form, Message } from "semantic-ui-react";
+import { Button, Form } from "semantic-ui-react";
 import API from "../../adapters/API";
 
-const EditAddressCard = ({ address, user, setError, setMode }) => {
+const EditAddressCard = ({
+  address,
+  setError,
+  setMode,
+  setMessage,
+  addresses,
+  setAddresses,
+}) => {
   const [invalidAddressFormFields, setInvalidAddressFormFields] = useState({});
   const [formSubmitting, setFormSubmitting] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
     recipient_name: address.recipient_name,
@@ -24,7 +30,7 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setFormSubmitting(true);
-    API.newAddress(formData, address.id)
+    API.editAddress(formData, address.id)
       .then((resp) => {
         console.log(resp);
         return resp;
@@ -35,9 +41,18 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
           setFormSubmitting(false);
           setInvalidAddressFormFields(resp.invalid_fields);
         } else {
-          console.log("valid submit");
           setFormSubmitting(false);
-          setFormSubmitted(true);
+          setMessage({
+            type: "positive",
+            header: "Address succesfully updated",
+          });
+          setMode("view");
+          let indexOfAddress = addresses.findIndex((a) => a.id === address.id);
+          setAddresses(
+            Object.assign([], addresses, {
+              [indexOfAddress]: formData,
+            })
+          );
         }
       })
       .catch((errorPromise) => {
@@ -57,8 +72,7 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
   };
 
   return (
-    <Form success={true} onSubmit={handleSubmit}>
-      <Message success header="Address succesfully added" />
+    <Form onSubmit={handleSubmit}>
       <Form.Group widths="equal">
         <Form.Input
           label="Recipient"
@@ -72,6 +86,7 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
           name="contact_number"
           onChange={handleChange}
           error={errorObj("contact_number")}
+          value={formData["contact_number"]}
         />
       </Form.Group>
       <Form.Input
@@ -79,12 +94,14 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
         name="line_one"
         onChange={handleChange}
         error={errorObj("line_one")}
+        value={formData["line_one"]}
       />
       <Form.Input
         label="Address line 2 (optional)"
         name="line_two"
         onChange={handleChange}
         error={errorObj("line_two")}
+        value={formData["line_two"]}
       />
       <Form.Group widths="equal">
         <Form.Input
@@ -92,18 +109,21 @@ const EditAddressCard = ({ address, user, setError, setMode }) => {
           name="town_city"
           onChange={handleChange}
           error={errorObj("town_city")}
+          value={formData["town_city"]}
         />
         <Form.Input
           label="County"
           name="county"
           onChange={handleChange}
           error={errorObj("county")}
+          value={formData["county"]}
         />
         <Form.Input
           label="Postcode"
           name="postcode"
           onChange={handleChange}
           error={errorObj("postcode")}
+          value={formData["postcode"]}
         />
       </Form.Group>
       <Button
