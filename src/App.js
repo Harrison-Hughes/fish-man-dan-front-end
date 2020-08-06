@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import API from "./adapters/API";
 import { Container, Segment } from "semantic-ui-react";
+import { Switch, Route, Redirect } from "react-router-dom";
+
 import LoadingScreen from "./LoadingScreen";
 import AuthenticatedApp from "./authenticated-app/AuthenticatedApp";
 import UnauthenticatedApp from "./unauthenticated-app/UnauthenticatedApp";
@@ -37,30 +39,32 @@ const App = () => {
   if (!validatedUser) return <LoadingScreen />;
   else
     return (
-      <div className="app">
-        <Container id="main-content">
-          {error && (
-            <Segment textAlign="center" color="red" inverted>
-              {" "}
-              <h2>{error.message}</h2>
-            </Segment>
-          )}
-          {user ? (
+      <Container id="main-content">
+        {error && (
+          <Segment textAlign="center" color="red" inverted>
+            {" "}
+            <h2>{error.message}</h2>
+          </Segment>
+        )}
+        {user ? <Redirect to="/user" /> : <Redirect to="/visitor" />}
+        <Switch>
+          <Route path="/user">
             <AuthenticatedApp
               user={user}
               setError={setError}
               setUser={setUser}
               logOut={() => logOut()}
             />
-          ) : (
+          </Route>
+          <Route path="/visitor">
             <UnauthenticatedApp
               setUser={setUser}
               setError={setError}
               user={user}
             />
-          )}
-        </Container>
-      </div>
+          </Route>
+        </Switch>
+      </Container>
     );
 };
 
