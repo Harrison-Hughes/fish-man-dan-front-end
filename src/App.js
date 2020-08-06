@@ -46,9 +46,9 @@ const App = () => {
             <h2>{error.message}</h2>
           </Segment>
         )}
+        {user ? <Redirect to="/user" /> : <Redirect to="/visitor" />}
         <Switch>
-          {user ? <Redirect to="/welcome-back" /> : <Redirect to="/guest" />}
-          <Route path="/welcome-back">
+          <Route path="/user">
             <AuthenticatedApp
               user={user}
               setError={setError}
@@ -56,7 +56,7 @@ const App = () => {
               logOut={() => logOut()}
             />
           </Route>
-          <Route path="/guest">
+          <Route path="/visitor">
             <UnauthenticatedApp
               setUser={setUser}
               setError={setError}

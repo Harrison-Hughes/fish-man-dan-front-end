@@ -1,5 +1,6 @@
 import React from "react";
 import { Grid, Popup, Button, Icon } from "semantic-ui-react";
+import { Redirect } from "react-router-dom";
 
 const Navbar = ({ logOut, bodyType, setBodyType }) => {
   return (
