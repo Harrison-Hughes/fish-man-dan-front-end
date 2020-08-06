@@ -81,6 +81,15 @@ const deleteAddress = (addressID) =>
     .then(jsonify)
     .then(handleUserResponse);
 
+const placeOrder = (order) =>
+  fetch(`${API_ROOT}/orders`, {
+    method: "POST",
+    headers: HEADERS_AUTH,
+    body: JSON.stringify({ order }),
+  })
+    .then(jsonify)
+    .then(handleUserResponse);
+
 export default {
   signin,
   signup,
@@ -89,6 +98,7 @@ export default {
   newAddress,
   editAddress,
   deleteAddress,
+  placeOrder,
   hasToken: !!localStorage.fishManDanToken,
   clearToken: () => localStorage.removeItem("fishManDanToken"),
 };

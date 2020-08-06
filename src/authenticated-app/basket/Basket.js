@@ -33,19 +33,34 @@ const Basket = ({ basket, setBasket, items, setBodyType }) => {
       ));
   };
 
+  const renderBasket = () => {
+    return (
+      <>
+        <Item.Group divided>{basketItems()}</Item.Group>
+        <Button
+          content="continue browsing"
+          onClick={() => setBodyType("browse")}
+        />
+        <Button content="edit basket" primary disabled={!editBasketEnabled} />
+        <Button
+          content="proceed to place order"
+          positive
+          disabled={!placeOrderEnabled}
+        />
+      </>
+    );
+  };
+
+  const renderOrder = () => {
+    return <> </>;
+  };
+
   return (
     <div>
-      <Item.Group divided>{basketItems()}</Item.Group>
-      <Button
-        content="continue browsing"
-        onClick={() => setBodyType("browse")}
-      />
-      <Button content="edit basket" primary disabled={!editBasketEnabled} />
-      <Button
-        content="proceed to place order"
-        positive
-        disabled={!placeOrderEnabled}
-      />
+      <h1>Basket</h1>
+      {renderBasket()}
+      <h1>Pending Order</h1>
+      {renderOrder()}
     </div>
   );
 };
