@@ -44,9 +44,9 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
         bodyType={bodyType}
         setBodyType={setBodyType}
       />
-      <Redirect to={`/user/${bodyType}`} />
+      <Redirect to={`/${bodyType}`} />
       <Switch>
-        <Route exact path={`/user/browse`}>
+        <Route exact path={`/browse`}>
           <Items
             items={items}
             interactive={true}
@@ -54,7 +54,7 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
             setBasket={setBasket}
           />
         </Route>
-        <Route exact path="/user/basket">
+        <Route exact path="/basket">
           <Basket
             user={user}
             items={items}
@@ -63,7 +63,7 @@ const AuthenticatedApp = ({ user, setUser, setError, logOut }) => {
             setBodyType={setBodyType}
           />
         </Route>
-        <Route exact path="/user/profile">
+        <Route exact path="/profile">
           <Profile setError={setError} user={user} />
         </Route>
       </Switch>
